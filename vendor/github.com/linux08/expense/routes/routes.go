@@ -22,7 +22,6 @@ func Handlers() *mux.Router {
 	r.HandleFunc("/api/expenses", controllers.GetExpenses).Methods("GET")
 	r.HandleFunc("/api/expenses/{id}", controllers.GetExpense).Methods("GET")
 	r.HandleFunc("/api/expenses", controllers.CreateExpense).Methods("POST")
-	r.HandleFunc("/api/expenses", controllers.UpdateExpenses).Methods("PUT")
 	r.HandleFunc("/api/expenses/{id}", controllers.UpdateExpense).Methods("PUT")
 	r.HandleFunc("/api/expenses/{id}", controllers.DeleteExpense).Methods("DELETE")
 	return r
