@@ -8,10 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"expense/controllers"
-
-	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/linux08/expense/routes"
 )
 
 func main() {
@@ -26,7 +24,8 @@ func main() {
 	fmt.Println(port)
 
 	// Handle routes
-	http.Handle("/", Handlers())
+	http.Handle("/", routes.Handlers())
+	// http.ListenAndServe()
 
 	// serve
 	log.Printf("Server up on port '%s'", port)
@@ -34,20 +33,16 @@ func main() {
 
 }
 
-// Handlers : Use gorilla mux.
-// CRUD + Vote Handlers.
-func Handlers() *mux.Router {
-	r := mux.NewRouter().StrictSlash(true)
+// // Handlers : Use gorilla mux.
+// // CRUD + Vote Handlers.
+// func Handlers() *mux.Router {
+// 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/api", controllers.ListHandler).Methods("GET")
-
-	// r.HandleFunc("/api", utils.MiddlewareHandler(controllers.ListHandler)).Methods("GET")
-	// r.HandleFunc("/api/v1/polls/{poll}", MiddlewareHandler(getHandler)).Methods("GET")
-	// r.HandleFunc("/api/v1/polls", MiddlewareHandler(postHandler)).Methods("POST")
-	// r.HandleFunc("/api/v1/polls/{poll}", MiddlewareHandler(putHandler)).Methods("PUT")
-	// r.HandleFunc("/api/v1/polls/{poll}", MiddlewareHandler(deleteHandler)).Methods("DELETE")
-	// r.HandleFunc("/api/v1/polls/{poll}/answers/{answer}", MiddlewareHandler(voteHandler)).Methods("POST")
-	// r.NotFoundHandler = LogHandler(notFoundHandler)
-
-	return r
-}
+// 	r.HandleFunc("/api", testApi).Methods("GET")
+// 	r.HandleFunc("/api/expenses", getExpenses).Methods("GET")
+// 	r.HandleFunc("/api/expenses/{id}", getExpense).Methods("GET")
+// 	r.HandleFunc("/api/expenses", createExpense).Methods("POST")
+// 	r.HandleFunc("/api/expenses/{id}", updateExpense).Methods("PUT")
+// 	r.HandleFunc("/api/expenses/{id}", deleteExpense).Methods("DELETE")
+// 	return r
+// }
