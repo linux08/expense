@@ -35,7 +35,7 @@
     "routes",
   ]
   pruneopts = "UT"
-  revision = "4a9bd00356e4ef7ae0c6649d3792fb04908d5a91"
+  revision = "c03c66bc125089f365fd2a5a648bbba5e7bf49c3"
 
 [[projects]]
   branch = "v2"
