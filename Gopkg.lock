@@ -27,14 +27,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c9db0200f4ab96ca5651913d11b06d9889060b84708180bb840b91e638e9aa4c"
+  digest = "1:b226f2f5bda5f7ce767f75c43c17e244f6883b8653756acbbcec68b52ac6d2d4"
   name = "github.com/linux08/expense"
   packages = [
     "controllers",
     "routes",
   ]
   pruneopts = "UT"
-  revision = "a561a237d7edba8ac6d5a88bd9efe642f32d3146"
+  revision = "f089471810fb07fead55bf901015b60a1abb9081"
 
 [[projects]]
   branch = "v2"

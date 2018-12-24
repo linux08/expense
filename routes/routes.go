@@ -10,11 +10,11 @@ import (
 func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/api", controllers.testAPI).Methods("GET")
-	r.HandleFunc("/api/expenses", controllers.getExpenses).Methods("GET")
-	r.HandleFunc("/api/expenses/{id}", controllers.getExpense).Methods("GET")
-	r.HandleFunc("/api/expenses", controllers.createExpense).Methods("POST")
-	r.HandleFunc("/api/expenses/{id}", controllers.updateExpense).Methods("PUT")
-	r.HandleFunc("/api/expenses/{id}", controllers.deleteExpense).Methods("DELETE")
+	r.HandleFunc("/api", controllers.TestAPI).Methods("GET")
+	r.HandleFunc("/api/expenses", controllers.GetExpenses).Methods("GET")
+	r.HandleFunc("/api/expenses/{id}", controllers.GetExpense).Methods("GET")
+	r.HandleFunc("/api/expenses", controllers.CreateExpense).Methods("POST")
+	r.HandleFunc("/api/expenses/{id}", controllers.UpdateExpense).Methods("PUT")
+	r.HandleFunc("/api/expenses/{id}", controllers.DeleteExpense).Methods("DELETE")
 	return r
 }

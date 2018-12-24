@@ -4,27 +4,27 @@ import (
 	"net/http"
 )
 
-func GetExpenses(w http.ResponseWriter, r *http.Request) {
+func getExpenses(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("dddjj")
 	w.Write([]byte("Hello World"))
 }
 
-func GetExpense(w http.ResponseWriter, r *http.Request) {
+func getExpense(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("dddjj")
 	w.Write([]byte("Hello World"))
 }
 
-func CreateExpense(w http.ResponseWriter, r *http.Request) {
+func createExpense(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("dddjj")
 	w.Write([]byte("Hello World"))
 }
 
-func UpdateExpense(w http.ResponseWriter, r *http.Request) {
+func updateExpense(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("dddjj")
 	w.Write([]byte("Hello World"))
 }
 
-func DeleteExpense(w http.ResponseWriter, r *http.Request) {
+func deleteExpense(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("dddjj")
 	w.Write([]byte("Hello World"))
 }
