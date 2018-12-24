@@ -1,3 +1,3 @@
 ```dep ensure```
 
-```ep ensure -update```
+```dep ensure -update```

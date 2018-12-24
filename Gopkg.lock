@@ -27,14 +27,15 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b226f2f5bda5f7ce767f75c43c17e244f6883b8653756acbbcec68b52ac6d2d4"
+  digest = "1:011c7b5be1c5cef52152154451f523cb64b2fefe54fc1d6e78ce5ce4f93b96e0"
   name = "github.com/linux08/expense"
   packages = [
     "controllers",
+    "models",
     "routes",
   ]
   pruneopts = "UT"
-  revision = "f089471810fb07fead55bf901015b60a1abb9081"
+  revision = "3dd029d29b1f3c51af2f3f84505cd98f84d9bc85"
 
 [[projects]]
   branch = "v2"
@@ -58,6 +59,7 @@
     "github.com/gorilla/mux",
     "github.com/joho/godotenv",
     "github.com/linux08/expense/controllers",
+    "github.com/linux08/expense/models",
     "github.com/linux08/expense/routes",
     "gopkg.in/mgo.v2",
   ]
