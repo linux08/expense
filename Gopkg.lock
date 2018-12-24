@@ -26,6 +26,17 @@
   version = "v1.3.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:c9db0200f4ab96ca5651913d11b06d9889060b84708180bb840b91e638e9aa4c"
+  name = "github.com/linux08/expense"
+  packages = [
+    "controllers",
+    "routes",
+  ]
+  pruneopts = "UT"
+  revision = "a561a237d7edba8ac6d5a88bd9efe642f32d3146"
+
+[[projects]]
   branch = "v2"
   digest = "1:988de7520a09024d5d94cd99bd545afbf194893994ec759b1cda0a0bbb6adb80"
   name = "gopkg.in/mgo.v2"
@@ -46,6 +57,8 @@
     "github.com/gorilla/context",
     "github.com/gorilla/mux",
     "github.com/joho/godotenv",
+    "github.com/linux08/expense/controllers",
+    "github.com/linux08/expense/routes",
     "gopkg.in/mgo.v2",
   ]
   solver-name = "gps-cdcl"
