@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"expense/models"
+
 	"github.com/gorilla/mux"
-	"github.com/linux08/expense/models"
 )
 
 //Init expense as a slice of expense struct
