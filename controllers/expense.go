@@ -7,14 +7,16 @@ import (
 	"net/http"
 	"strconv"
 
+	"expense/models"
+
 	"github.com/gorilla/mux"
-	"github.com/linux08/expense/models"
 )
 
 //Init expense as a slice of expense struct
 var expense []models.Expense
 
 type exp struct{}
+
 type expenseArray []models.Expense
 
 //intialized sample object
@@ -24,12 +26,10 @@ func InitSampleObj() (expenses expenseArray) {
 	expense := make([]models.Expense, 0, 5)
 
 	expense = append(expense,
-		models.Expense{ID: "1", Name: "good", Reason: "i need to save", Vat: "132",
-			User: &models.User{ID: "13", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{ID: "1", Name: "good", Reason: "i need to save", Vat: "132", User: &models.User{ID: "13", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
 
 	expense = append(expense,
-		models.Expense{ID: "2", Name: "godod", Reason: "i need to save", Vat: "13f2",
-			User: &models.User{ID: "15", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{ID: "2", Name: "godod", Reason: "i need to save", Vat: "13f2", User: &models.User{ID: "15", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
 	return expense
 }
 

@@ -4,8 +4,9 @@ import (
 	"expense/models"
 	"net/http"
 
+	"expense/controllers"
+
 	"github.com/gorilla/mux"
-	"github.com/linux08/expense/controllers"
 )
 
 //Init expense as a slice of expense struct
