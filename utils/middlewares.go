@@ -6,8 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/context"
-
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 )
 
 var (

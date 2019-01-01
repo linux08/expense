@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -57,16 +65,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:c639c7a4e8fa72b1c1a55c3c3716aa5c9b214075ed71b8555575f04d5100d5a6"
-  name = "github.com/linux08/expense"
-  packages = [
-    "controllers",
-    "models",
-    "routes",
-  ]
+  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  name = "github.com/pkg/errors"
+  packages = ["."]
   pruneopts = "UT"
-  revision = "f05fd95fdb90aaee2cd9a6fbfe7be13303e428a8"
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   branch = "v2"
@@ -86,14 +90,13 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/dgrijalva/jwt-go",
     "github.com/gorilla/context",
     "github.com/gorilla/mux",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/joho/godotenv",
-    "github.com/linux08/expense/controllers",
-    "github.com/linux08/expense/models",
-    "github.com/linux08/expense/routes",
+    "github.com/pkg/errors",
     "gopkg.in/mgo.v2",
   ]
   solver-name = "gps-cdcl"

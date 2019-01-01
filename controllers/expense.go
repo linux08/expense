@@ -55,7 +55,8 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&expense)
 	expense.ID = strconv.Itoa(rand.Intn(1000))
 	var expenses = InitSampleObj()
-	expenses = append(expenses, expense)
+	db.
+		expenses = append(expenses, expense)
 	fmt.Println(expense)
 	json.NewEncoder(w).Encode(expense)
 }
