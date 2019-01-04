@@ -1,10 +1,14 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 //Expense model declaration
 type Expense struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
+	gorm.Model
+	Name string
+
 	Reason string `json:"reason"`
 	Vat    string `json:"vat"`
-	User   *User  `json:"user_id"`
+	UserID uint
+	User   *User `json:"user_id"`
 }

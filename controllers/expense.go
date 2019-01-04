@@ -3,13 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"net/http"
-	"strconv"
 
 	"expense/models"
-
-	"github.com/gorilla/mux"
 )
 
 //Init expense as a slice of expense struct
@@ -26,10 +22,10 @@ func InitSampleObj() (expenses expenseArray) {
 	expense := make([]models.Expense, 0, 5)
 
 	expense = append(expense,
-		models.Expense{ID: "1", Name: "good", Reason: "i need to save", Vat: "132", User: &models.User{ID: "13", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{Name: "good", Reason: "i need to save", Vat: "132", User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
 
 	expense = append(expense,
-		models.Expense{ID: "2", Name: "godod", Reason: "i need to save", Vat: "13f2", User: &models.User{ID: "15", Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{Name: "godod", Reason: "i need to save", Vat: "13f2", User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
 	return expense
 }
 
@@ -39,69 +35,70 @@ func GetExpenses(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetExpense(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
+	// params := mux.Vars(r)
 	expense := InitSampleObj()
-	for _, item := range expense {
-		if item.ID == params["id"] {
-			json.NewEncoder(w).Encode(item)
-			return
-		}
-	}
-	json.NewEncoder(w).Encode(&models.Expense{})
+	// for _, item := range expense {
+	// 	if item.ID == params["id"] {
+	// 		json.NewEncoder(w).Encode(item)
+	// 		return
+	// 	}
+	// }
+	json.NewEncoder(w).Encode(expense)
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	var expense models.Expense
 	_ = json.NewDecoder(r.Body).Decode(&expense)
-	expense.ID = strconv.Itoa(rand.Intn(1000))
+	// expense.ID = strconv.Itoa(rand.Intn(1000))
 	var expenses = InitSampleObj()
-	db.
-		expenses = append(expenses, expense)
+	expenses = append(expenses, expense)
 	fmt.Println(expense)
 	json.NewEncoder(w).Encode(expense)
 }
 
 func UpdateExpenses(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
+	// params := mux.Vars(r)
 	expense := InitSampleObj()
-	for index, item := range expense {
-		if item.ID == params["id"] {
-			expense = append(expense[:index], expense[index+1:]...)
-			var expenseObj models.Expense
-			_ = json.NewDecoder(r.Body).Decode(&expenseObj)
-			expenseObj.ID = strconv.Itoa(rand.Intn(1000))
-			var expenses = InitSampleObj()
-			expenses = append(expenses, expenseObj)
-			fmt.Println(expenses)
-			json.NewEncoder(w).Encode(expenses)
-		}
-	}
+	// for index, item := range expense {
+	// 	if item.ID == params["id"] {
+	// 		expense = append(expense[:index], expense[index+1:]...)
+	// 		var expenseObj models.Expense
+	// 		_ = json.NewDecoder(r.Body).Decode(&expenseObj)
+	// 		// expenseObj.ID = strconv.Itoa(rand.Intn(1000))
+	// 		var expenses = InitSampleObj()
+	// 		expenses = append(expenses, expenseObj)
+	// 		fmt.Println(expenses)
+	// 		json.NewEncoder(w).Encode(expenses)
+	// 	}
+	// }
+	json.NewEncoder(w).Encode(expense)
 }
 
 func UpdateExpense(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
+	// params := mux.Vars(r)
 	expense := InitSampleObj()
-	for index, item := range expense {
-		if item.ID == params["id"] {
-			expense = append(expense[:index], expense[index+1:]...)
-			var expenseObj models.Expense
-			_ = json.NewDecoder(r.Body).Decode(&expenseObj)
-			expenseObj.ID = strconv.Itoa(rand.Intn(1000))
-			expense = append(expense, expenseObj)
-			fmt.Println(expense)
-			json.NewEncoder(w).Encode(expense)
-		}
-	}
+	// for index, item := range expense {
+	// if item.ID == params["id"] {
+	// 	expense = append(expense[:index], expense[index+1:]...)
+	// 	var expenseObj models.Expense
+	// 	_ = json.NewDecoder(r.Body).Decode(&expenseObj)
+	// 	expenseObj.ID = strconv.Itoa(rand.Intn(1000))
+	// 	expense = append(expense, expenseObj)
+	// 	fmt.Println(expense)
+	// 	json.NewEncoder(w).Encode(expense)
+	// }
+	// }
+	json.NewEncoder(w).Encode(expense)
 }
 
 func DeleteExpense(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
+	// params := mux.Vars(r)
 	expense := InitSampleObj()
-	for index, item := range expense {
-		if item.ID == params["id"] {
-			expense = append(expense[:index], expense[index+1:]...)
-			break
-		}
-	}
+	// for index, item := range expense {
+	// 	if item.ID == params["id"] {
+	// 		expense = append(expense[:index], expense[index+1:]...)
+	// 		break
+	// 	}
+	// }
 	json.NewEncoder(w).Encode(expense)
 }

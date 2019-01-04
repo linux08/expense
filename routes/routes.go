@@ -13,7 +13,6 @@ import (
 var expense []models.Expense
 
 // Handlers : Use gorilla mux.
-// CRUD + Vote Handlers.
 func Handlers() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
@@ -25,6 +24,9 @@ func Handlers() *mux.Router {
 	r.HandleFunc("/api/expenses", controllers.CreateExpense).Methods("POST")
 	r.HandleFunc("/api/expenses/{id}", controllers.UpdateExpense).Methods("PUT")
 	r.HandleFunc("/api/expenses/{id}", controllers.DeleteExpense).Methods("DELETE")
+
+	r.HandleFunc("/api/user", controllers.CreateUser).Methods("POST")
+	r.HandleFunc("/api/user", controllers.FetchUsers).Methods("GET")
 	return r
 }
 

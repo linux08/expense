@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"expense/routes"
-	"expense/utils"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -22,12 +21,11 @@ func main() {
 		fmt.Print(e)
 	}
 	fmt.Println(e)
-	godotenv.Load()
 
 	port := os.Getenv("PORT")
 	fmt.Println(port)
 
-	utils.ConnectDB()
+	// utils.ConnectDB()
 
 	// Handle routes
 	http.Handle("/", routes.Handlers())
