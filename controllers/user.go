@@ -18,26 +18,18 @@ func TestAPI(w http.ResponseWriter, r *http.Request) {
 //CreateUser function
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("jjdjdjjd")
-	var user models.User
+	user := &models.User{}
 	// fmt.Println(json.NewDecoder(r.Body))
-	_ = json.NewDecoder(r.Body).Decode(&user)
-	// reqBody := json.NewDecoder(r.Body).Decode(&models.User)
-	fmt.Println(user)
-	db.Create(user)
-	// fmt.Println(users)
-	// db.Create()
-	json.NewEncoder(w).Encode(user)
+	json.NewDecoder(r.Body).Decode(user)
+	db.NewRecord(user)
+
+	var createdUser = db.Create(user)
+	json.NewEncoder(w).Encode(createdUser)
 }
 
 //FetchUser function
 func FetchUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("fetch aall user")
-	var user models.User
-	// fmt.Println(json.NewDecoder(r.Body))
-	// db.Find(&user)
-	users := db.Find(&user)
-
-	// db.Create()
+	var users []models.User
+	db.Find(&users)
 	json.NewEncoder(w).Encode(users)
 }
- 
