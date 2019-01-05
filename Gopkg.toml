@@ -43,4 +43,4 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/codegangsta/gin"
+  name = "golang.org/x/crypto"

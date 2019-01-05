@@ -6,24 +6,37 @@ import (
 	"expense/utils"
 	"fmt"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var db = utils.ConnectDB()
 
 func TestAPI(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("API live and kicking")
 	w.Write([]byte("API live and kicking"))
 }
 
 //CreateUser function
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("jjdjdjjd")
-	user := &models.User{}
-	// fmt.Println(json.NewDecoder(r.Body))
-	json.NewDecoder(r.Body).Decode(user)
-	db.NewRecord(user)
 
-	var createdUser = db.Create(user)
+	type ErrorResponse struct {
+		Err string
+	}
+	user := &models.User{}
+	pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		fmt.Println("err")
+		err := ErrorResponse{
+			Err: "Password validation failed",
+		}
+		json.NewEncoder(w).Encode(err)
+	}
+	json.NewDecoder(r.Body).Decode(user)
+	user.Password = string(pass)
+
+	// json.NewEncoder(w).Encode(user)
+	// db.NewRecord(user)
+	createdUser := db.Create(user)
 	json.NewEncoder(w).Encode(createdUser)
 }
 

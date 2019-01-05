@@ -10,8 +10,8 @@ type User struct {
 
 	Name     string
 	Email    string `gorm:"type:varchar(100);unique_index"`
-	Gender   string `json:"gender"`
-	Password string `json:"password"`
+	Gender   string `json:"Gender"`
+	Password string `json:"Password"`
 	Num      int    `gorm:"AUTO_INCREMENT"` // set num to auto incrementable
 	Expense  []Expense
 }
