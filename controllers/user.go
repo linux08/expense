@@ -63,18 +63,18 @@ func FetchUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	user := &models.User{}
 	params := mux.Vars(r)
 	var id = params["id"]
-	// user := &models.User{}
-	var user models.User
 	db.First(&user, id)
+	json.NewDecoder(r.Body).Decode(user)
+	db.Save(&user)
 	json.NewEncoder(w).Encode(&user)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var id = params["id"]
-	// user := &models.User{}
 	var user models.User
 	db.First(&user, id)
 	db.Delete(&user)
