@@ -27,6 +27,11 @@ func Handlers() *mux.Router {
 
 	r.HandleFunc("/api/user", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/api/user", controllers.FetchUsers).Methods("GET")
+
+	r.HandleFunc("/api/user/{id}", controllers.GetUser).Methods("GET")
+	r.HandleFunc("/api/user/{id}", controllers.UpdateUser).Methods("PUT")
+	r.HandleFunc("/api/user/{id}", controllers.DeleteUser).Methods("DELETE")
+
 	return r
 }
 

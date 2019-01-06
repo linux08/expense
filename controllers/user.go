@@ -7,8 +7,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type ErrorResponse struct {
+	Err string
+}
+type error interface {
+	Error() string
+}
 
 var db = utils.ConnectDB()
 
@@ -19,13 +27,10 @@ func TestAPI(w http.ResponseWriter, r *http.Request) {
 //CreateUser function
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
-	type ErrorResponse struct {
-		Err string
-	}
 	user := &models.User{}
 	pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		fmt.Println("err")
+		fmt.Println(err)
 		err := ErrorResponse{
 			Err: "Password validation failed",
 		}
@@ -34,9 +39,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(user)
 	user.Password = string(pass)
 
-	// json.NewEncoder(w).Encode(user)
-	// db.NewRecord(user)
 	createdUser := db.Create(user)
+	fmt.Print("created-user")
+	fmt.Println(createdUser.Error)
+	var errMessage = createdUser.Error
+
+	if createdUser.Error != nil {
+		// fmt.Println("eree")
+		// err := ErrorResponse{
+		// 	// Err: errors.s(errMessage),
+		// }
+		fmt.Println(errMessage)
+		// json.NewEncoder(w).Encode(errMessage)
+	}
 	json.NewEncoder(w).Encode(createdUser)
 }
 
@@ -45,4 +60,31 @@ func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	var users []models.User
 	db.Find(&users)
 	json.NewEncoder(w).Encode(users)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var id = params["id"]
+	// user := &models.User{}
+	var user models.User
+	db.First(&user, id)
+	json.NewEncoder(w).Encode(&user)
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var id = params["id"]
+	// user := &models.User{}
+	var user models.User
+	db.First(&user, id)
+	db.Delete(&user)
+	json.NewEncoder(w).Encode("User deleted")
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var id = params["id"]
+	var user models.User
+	db.First(&user, id)
+	json.NewEncoder(w).Encode(&user)
 }
