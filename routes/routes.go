@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"expense/controllers"
+	// "expense/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -16,6 +17,7 @@ var expense []models.Expense
 func Handlers() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
+	// utils.parseClaims()
 	r.Use(commonMiddleware)
 
 	r.HandleFunc("/api", controllers.TestAPI).Methods("GET")
