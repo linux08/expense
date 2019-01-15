@@ -45,12 +45,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var errMessage = createdUser.Error
 
 	if createdUser.Error != nil {
-		// fmt.Println("eree")
-		// err := ErrorResponse{
-		// 	// Err: errors.s(errMessage),
-		// }
 		fmt.Println(errMessage)
-		// json.NewEncoder(w).Encode(errMessage)
 	}
 	json.NewEncoder(w).Encode(createdUser)
 }
