@@ -1,7 +1,5 @@
 Simple golang API
 
-
-
 Task
 Imagine that you come back from 2 weeks of holidays on a Monday. On the team Kanban board, assigned to you, two tasks await:
 
