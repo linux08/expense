@@ -6,14 +6,18 @@ import (
 	"expense/utils"
 	"fmt"
 	"net/http"
+	"os"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type ErrorResponse struct {
 	Err string
 }
+
 type error interface {
 	Error() string
 }
@@ -26,6 +30,64 @@ func MagaAPI(w http.ResponseWriter, r *http.Request) {
 
 func TestAPI(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("API live and kicking"))
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	user := &models.User{}
+	err := json.NewDecoder(r.Body).Decode(user) //decode the request body into struct and failed if any error occur
+	if err != nil {
+		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	resp := FindOne(models.User{})
+	json.NewEncoder(w).Encode(resp)
+	// if err != nil {
+	// 	var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
+	// 	json.NewEncoder(w).Encode(resp)
+	// 	return
+	// }
+	// db.First(&user, id)
+	// fmt.Println(userResp)
+	// json.NewEncoder(w).Encode(userResp)
+
+}
+
+func FindOne(userObj models.User) map[string]interface{} {
+	fmt.Print("got ehheh")
+	user := &models.User{}
+	email := userObj.Email
+	err := db.Where(&models.User{Email: email}).First(user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
+			// json.NewEncoder(w).Encode(resp)
+			return resp
+		}
+		// var resp = map[string]interface{}{"status": false, "Connection error. Please retry"}
+		// return json.NewEncoder(w).Encode(resp)
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(userObj.Password), []byte(userObj.Password))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
+		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
+		// json.NewEncoder(w).Encode(resp)
+		return resp
+	}
+
+	user.Password = ""
+
+	//Create JWT token
+	tk := &models.Token{UserID: user.ID}
+	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	var respObj map[string]interface{}
+	// respObj := user
+	respObj["Token"] = tokenString //Store the token in the response
+	var resp = map[string]interface{}{"status": false, "message": "logged in"}
+	resp["user"] = user
+	return resp
 }
 
 //CreateUser function
