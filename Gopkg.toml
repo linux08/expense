@@ -44,3 +44,11 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/crypto"
+
+[[constraint]]
+  name = "gopkg.in/go-playground/validator.v8"
+  version = "8.18.2"
+
+[[constraint]]
+  name = "github.com/dimfeld/httptreemux"
+  version = "5.0.2"

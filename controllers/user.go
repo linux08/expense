@@ -20,6 +20,10 @@ type error interface {
 
 var db = utils.ConnectDB()
 
+func MagaAPI(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("i am here")
+}
+
 func TestAPI(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("API live and kicking"))
 }

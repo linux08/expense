@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"expense/controllers"
-	// "expense/utils"
+	"expense/utils/auth"
 
 	"github.com/gorilla/mux"
 )
@@ -19,6 +19,7 @@ func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	// utils.parseClaims()
 	r.Use(commonMiddleware)
+	r.Use(auth.JwtVerify)
 
 	r.HandleFunc("/api", controllers.TestAPI).Methods("GET")
 	r.HandleFunc("/api/expenses", controllers.GetExpenses).Methods("GET")
