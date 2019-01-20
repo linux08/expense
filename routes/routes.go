@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"expense/controllers"
-	"expense/utils/auth"
 
 	"github.com/gorilla/mux"
 )
@@ -19,7 +18,7 @@ func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	// utils.parseClaims()
 	r.Use(commonMiddleware)
-	r.Use(auth.JwtVerify)
+	// r.Use(auth.JwtVerify)
 
 	r.HandleFunc("/api", controllers.TestAPI).Methods("GET")
 	r.HandleFunc("/api/expenses", controllers.GetExpenses).Methods("GET")
@@ -28,7 +27,7 @@ func Handlers() *mux.Router {
 	r.HandleFunc("/api/expenses/{id}", controllers.UpdateExpense).Methods("PUT")
 	r.HandleFunc("/api/expenses/{id}", controllers.DeleteExpense).Methods("DELETE")
 
-	r.HandleFunc("/api/user", controllers.CreateUser).Methods("POST")
+	r.HandleFunc("/api/register", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/api/login", controllers.Login).Methods("POST")
 	r.HandleFunc("/api/user", controllers.FetchUsers).Methods("GET")
 

@@ -10,7 +10,6 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,52 +39,37 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(resp)
 		return
 	}
-
-	resp := FindOne(models.User{})
+	resp := FindOne(user.Email, user.Password)
 	json.NewEncoder(w).Encode(resp)
-	// if err != nil {
-	// 	var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
-	// 	json.NewEncoder(w).Encode(resp)
-	// 	return
-	// }
-	// db.First(&user, id)
-	// fmt.Println(userResp)
-	// json.NewEncoder(w).Encode(userResp)
-
 }
 
-func FindOne(userObj models.User) map[string]interface{} {
-	fmt.Print("got ehheh")
+func FindOne(email, password string) map[string]interface{} {
 	user := &models.User{}
-	email := userObj.Email
-	err := db.Where(&models.User{Email: email}).First(user).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
-			// json.NewEncoder(w).Encode(resp)
-			return resp
-		}
-		// var resp = map[string]interface{}{"status": false, "Connection error. Please retry"}
-		// return json.NewEncoder(w).Encode(resp)
+	fmt.Println("email")
+	fmt.Println(password)
+	if err := db.Where("Email = ?", email).First(user).Error; err != nil {
+		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
+		return resp
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(userObj.Password), []byte(userObj.Password))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
+	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	fmt.Println("errf")
+	fmt.Println(errf)
+	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
 		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
 		// json.NewEncoder(w).Encode(resp)
 		return resp
 	}
 
-	user.Password = ""
+	// user.Password = ""
 
 	//Create JWT token
 	tk := &models.Token{UserID: user.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
-	var respObj map[string]interface{}
-	// respObj := user
-	respObj["Token"] = tokenString //Store the token in the response
+
 	var resp = map[string]interface{}{"status": false, "message": "logged in"}
+	resp["Token"] = tokenString //Store the token in the response
 	resp["user"] = user
 	return resp
 }
@@ -107,7 +91,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	createdUser := db.Create(user)
 	fmt.Print("created-user")
-	fmt.Println(createdUser.Error)
+	fmt.Println(createdUser)
 	var errMessage = createdUser.Error
 
 	if createdUser.Error != nil {
