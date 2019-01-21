@@ -15,6 +15,8 @@ type exp struct{}
 
 type expenseArray []models.Expense
 
+// var db = utils.ConnectDB()
+
 //intialized sample object
 func InitSampleObj() (expenses expenseArray) {
 	//Init expenses  var as a slice of expense struct
@@ -47,13 +49,22 @@ func GetExpense(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
-	var expense models.Expense
-	_ = json.NewDecoder(r.Body).Decode(&expense)
-	// expense.ID = strconv.Itoa(rand.Intn(1000))
-	var expenses = InitSampleObj()
-	expenses = append(expenses, expense)
+	expense := &models.Expense{}
+	json.NewDecoder(r.Body).Decode(expense)
 	fmt.Println(expense)
-	json.NewEncoder(w).Encode(expense)
+	createdExpense := db.Create(expense)
+	var errMessage = createdExpense.Error
+	if createdExpense.Error != nil {
+		fmt.Println(errMessage)
+	}
+	json.NewEncoder(w).Encode(createdExpense)
+	// var expense models.Expense
+	// _ = json.NewDecoder(r.Body).Decode(&expense)
+	// // expense.ID = strconv.Itoa(rand.Intn(1000))
+	// var expenses = InitSampleObj()
+	// expenses = append(expenses, expense)
+	// fmt.Println(expense)
+	// json.NewEncoder(w).Encode(expense)
 }
 
 func UpdateExpenses(w http.ResponseWriter, r *http.Request) {

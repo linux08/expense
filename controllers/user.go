@@ -6,7 +6,6 @@ import (
 	"expense/utils"
 	"fmt"
 	"net/http"
-	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -52,17 +51,17 @@ func FindOne(email, password string) map[string]interface{} {
 	}
 
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	fmt.Println("errf")
-	fmt.Println(errf)
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
 		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
 		return resp
 	}
 
-	//Create JWT token
 	tk := &models.Token{UserID: user.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	tokenString, error := token.SignedString([]byte("secret"))
+	if error != nil {
+		fmt.Println(error)
+	}
 
 	var resp = map[string]interface{}{"status": false, "message": "logged in"}
 	resp["Token"] = tokenString //Store the token in the response
@@ -100,6 +99,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	var users []models.User
 	db.Find(&users)
+
 	json.NewEncoder(w).Encode(users)
 }
 

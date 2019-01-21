@@ -3,10 +3,8 @@ package auth
 import (
 	"context"
 	"encoding/json"
-	"expense/models"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -38,39 +36,67 @@ func JwtVerify(next http.Handler) http.Handler {
 			return
 		}
 
-		splitted := strings.Split(tokenHeader, " ") //The token normally comes in format `Bearer {token-body}`, we check if the retrieved token matched this requirement
-		if len(splitted) != 2 {
-			var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(resp)
-			return
+		splitted := strings.Split(tokenHeader, ".") //The token normally comes in format `Bearer {token-body}`, we check if the retrieved token matched this requirement
+		fmt.Println(splitted)
+		fmt.Println(len(splitted))
+		if len(splitted) == 2 {
+			token, error := jwt.Parse(splitted[1], func(token *jwt.Token) (interface{}, error) {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("There was an error")
+				}
+				return []byte("secret"), nil
+			})
+			if error != nil {
+				var resp = map[string]interface{}{"status": false, "message": error.Error}
+				w.WriteHeader(http.StatusForbidden)
+				json.NewEncoder(w).Encode(resp)
+				return
+			}
+			if token.Valid {
+				//Everything went well, proceed with the request and set the caller to the user retrieved from the parsed token
+				fmt.Sprintf("User %", token.Claims) //Useful for monitoring
+				ctx := context.WithValue(r.Context(), "user", token.Claims)
+				r = r.WithContext(ctx)
+				next.ServeHTTP(w, r)
+			} else {
+				var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
+				w.WriteHeader(http.StatusForbidden)
+				json.NewEncoder(w).Encode(resp)
+			}
 		}
+		var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
+		w.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(w).Encode(resp)
 
-		tokenPart := splitted[1] //Grab the token part, what we are truly interested in
-		tk := &models.Token{}
-
-		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
-			return []byte(os.Getenv("token_password")), nil
-		})
-
-		if err != nil { //Malformed token, returns with http code 403 as usual
-			var resp = map[string]interface{}{"status": false, "message": "Malformed authentication token"}
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(resp)
-			return
-		}
-
-		if !token.Valid { //Token is invalid, maybe not signed on this server
-			var resp = map[string]interface{}{"status": false, "message": "Token is not valid"}
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(resp)
-			return
-		}
-
-		//Everything went well, proceed with the request and set the caller to the user retrieved from the parsed token
-		fmt.Sprintf("User %", tk.UserID) //Useful for monitoring
-		ctx := context.WithValue(r.Context(), "user", tk.UserID)
-		r = r.WithContext(ctx)
-		next.ServeHTTP(w, r) //proceed in the middleware chain!
 	})
 }
+
+// }
+// if len(splitted) != 2 {
+// 	var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
+// 	w.WriteHeader(http.StatusForbidden)
+// 	json.NewEncoder(w).Encode(resp)
+// 	return
+// }
+
+// tokenPart := splitted[1] //Grab the token part, what we are truly interested in
+// tk := &models.Token{}
+
+// token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
+// 	return []byte(os.Getenv("token_password")), nil
+// })
+// fmt.Println("the error")
+// fmt.Println(err)
+// if err != nil { //Malformed token, returns with http code 403 as usual
+// 	var resp = map[string]interface{}{"status": false, "message": "Malformed authentication token"}
+// 	w.WriteHeader(http.StatusForbidden)
+// 	json.NewEncoder(w).Encode(resp)
+// 	return
+// }
+
+// if !token.Valid { //Token is invalid, maybe not signed on this server
+// 	var resp = map[string]interface{}{"status": false, "message": "Token is not valid"}
+// 	w.WriteHeader(http.StatusForbidden)
+// 	json.NewEncoder(w).Encode(resp)
+// 	return
+// }

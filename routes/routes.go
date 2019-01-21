@@ -2,6 +2,7 @@ package routes
 
 import (
 	"expense/models"
+	"expense/utils/auth"
 	"net/http"
 
 	"expense/controllers"
@@ -18,7 +19,7 @@ func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	// utils.parseClaims()
 	r.Use(commonMiddleware)
-	// r.Use(auth.JwtVerify)
+	r.Use(auth.JwtVerify)
 
 	r.HandleFunc("/api", controllers.TestAPI).Methods("GET")
 	r.HandleFunc("/api/expenses", controllers.GetExpenses).Methods("GET")
@@ -42,6 +43,9 @@ func Handlers() *mux.Router {
 func commonMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Request-Headers, Access-Control-Request-Method, Connection, Host, Origin, User-Agent, Referer, Cache-Control, X-header")
 		next.ServeHTTP(w, r)
 	})
 }
