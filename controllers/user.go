@@ -45,8 +45,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 func FindOne(email, password string) map[string]interface{} {
 	user := &models.User{}
-	fmt.Println("email")
-	fmt.Println(password)
+
 	if err := db.Where("Email = ?", email).First(user).Error; err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
@@ -57,11 +56,8 @@ func FindOne(email, password string) map[string]interface{} {
 	fmt.Println(errf)
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
 		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
-		// json.NewEncoder(w).Encode(resp)
 		return resp
 	}
-
-	// user.Password = ""
 
 	//Create JWT token
 	tk := &models.Token{UserID: user.ID}
@@ -78,6 +74,8 @@ func FindOne(email, password string) map[string]interface{} {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	user := &models.User{}
+	json.NewDecoder(r.Body).Decode(user)
+
 	pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println(err)
@@ -86,12 +84,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		}
 		json.NewEncoder(w).Encode(err)
 	}
-	json.NewDecoder(r.Body).Decode(user)
+
 	user.Password = string(pass)
 
 	createdUser := db.Create(user)
-	fmt.Print("created-user")
-	fmt.Println(createdUser)
 	var errMessage = createdUser.Error
 
 	if createdUser.Error != nil {
