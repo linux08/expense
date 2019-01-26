@@ -1,11 +1,9 @@
 package auth
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -27,7 +25,7 @@ func JwtVerify(next http.Handler) http.Handler {
 		}
 
 		tokenHeader := r.Header.Get("Authorization") //Grab the token from the header
-
+		fmt.Println(tokenHeader)
 		if tokenHeader == "" {
 			//Token is missing, returns with error code 403 Unauthorized
 			var resp = map[string]interface{}{"status": false, "message": "Missing auth token"}
@@ -36,37 +34,64 @@ func JwtVerify(next http.Handler) http.Handler {
 			return
 		}
 
-		splitted := strings.Split(tokenHeader, ".") //The token normally comes in format `Bearer {token-body}`, we check if the retrieved token matched this requirement
-		fmt.Println(splitted)
-		fmt.Println(len(splitted))
-		if len(splitted) == 2 {
-			token, error := jwt.Parse(splitted[1], func(token *jwt.Token) (interface{}, error) {
-				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					return nil, fmt.Errorf("There was an error")
-				}
-				return []byte("secret"), nil
-			})
-			if error != nil {
-				var resp = map[string]interface{}{"status": false, "message": error.Error}
-				w.WriteHeader(http.StatusForbidden)
-				json.NewEncoder(w).Encode(resp)
-				return
+		token, err := jwt.Parse(tokenHeader, func(token *jwt.Token) (interface{}, error) {
+			// Don't forget to validate the alg is what you expect:
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 			}
-			if token.Valid {
-				//Everything went well, proceed with the request and set the caller to the user retrieved from the parsed token
-				fmt.Sprintf("User %", token.Claims) //Useful for monitoring
-				ctx := context.WithValue(r.Context(), "user", token.Claims)
-				r = r.WithContext(ctx)
-				next.ServeHTTP(w, r)
-			} else {
-				var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
-				w.WriteHeader(http.StatusForbidden)
-				json.NewEncoder(w).Encode(resp)
-			}
+
+			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+			// return _, nil
+			fmt.Println("ididi")
+			return nil, nil
+		})
+
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			fmt.Println(claims["foo"], claims["nbf"])
+		} else {
+			fmt.Println(err)
 		}
-		var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
-		w.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(w).Encode(resp)
+
+		// splitted := strings.Split(tokenHeader, ".")
+		// fmt.Println(splitted)
+		// fmt.Println(len(splitted))
+		// if len(splitted) == 3 {
+		// 	token, error := jwt.Parse(splitted[1], func(token *jwt.Token) (interface{}, error) {
+		// 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		// 			return nil, fmt.Errorf("There was an error")
+		// 		}
+		// 		return []byte("secret"), nil
+		// 	})
+		// 	fmt.Println("token")
+		// 	fmt.Println("the token")
+
+		// 	fmt.Println(error)
+		// 	if error != nil {
+		// 		fmt.Println("no error")
+		// 		fmt.Println(error.Error)
+		// 		var resp = map[string]interface{}{"status": false, "message": error}
+		// 		w.WriteHeader(http.StatusForbidden)
+		// 		json.NewEncoder(w).Encode(resp)
+		// 		return
+		// 	}
+		// 	if token.Valid {
+		// 		fmt.Println("vali token")
+		// 		//Everything went well, proceed with the request and set the caller to the user retrieved from the parsed token
+		// 		fmt.Sprintf("User %", token.Claims) //Useful for monitoring
+		// 		ctx := context.WithValue(r.Context(), "user", token.Claims)
+		// 		r = r.WithContext(ctx)
+		// 		next.ServeHTTP(w, r)
+		// 	} else {
+		// 		fmt.Println("others")
+		// 		var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformsssed auth token"}
+		// 		w.WriteHeader(http.StatusForbidden)
+		// 		json.NewEncoder(w).Encode(resp)
+		// 	}
+		// }
+		// fmt.Println("ah ah")
+		// var resp = map[string]interface{}{"status": false, "message": "Invalid/Malformed auth token"}
+		// w.WriteHeader(http.StatusForbidden)
+		// json.NewEncoder(w).Encode(resp)
 
 	})
 }

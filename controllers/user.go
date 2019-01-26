@@ -6,6 +6,7 @@ import (
 	"expense/utils"
 	"fmt"
 	"net/http"
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -49,6 +50,7 @@ func FindOne(email, password string) map[string]interface{} {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
 	}
+	expiresAt := time.Now().Add(time.Minute * 1).Unix()
 
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -56,7 +58,13 @@ func FindOne(email, password string) map[string]interface{} {
 		return resp
 	}
 
-	tk := &models.Token{UserID: user.ID}
+	tk := &models.Token{
+		user.ID,
+		&jwt.StandardClaims{
+			ExpiresAt: expiresAt,
+		},
+	}
+
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, error := token.SignedString([]byte("secret"))
 	if error != nil {
