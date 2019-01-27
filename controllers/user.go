@@ -72,7 +72,7 @@ func FindOne(email, password string) map[string]interface{} {
 	}
 
 	var resp = map[string]interface{}{"status": false, "message": "logged in"}
-	resp["Token"] = tokenString //Store the token in the response
+	resp["token"] = tokenString //Store the token in the response
 	resp["user"] = user
 	return resp
 }
