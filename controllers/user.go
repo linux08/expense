@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
 type ErrorResponse struct {
 	Err string
 }

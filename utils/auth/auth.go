@@ -10,6 +10,8 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+
+
 // Middleware function, which will be called for each request
 func JwtVerify(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
