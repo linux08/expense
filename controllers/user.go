@@ -13,7 +13,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
 type ErrorResponse struct {
 	Err string
 }
@@ -51,7 +50,7 @@ func FindOne(email, password string) map[string]interface{} {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
 	}
-	expiresAt := time.Now().Add(time.Minute * 1).Unix()
+	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
 
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!

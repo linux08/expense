@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"expense/models"
 	"fmt"
@@ -9,8 +10,6 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
-
-
 
 // Middleware function, which will be called for each request
 func JwtVerify(next http.Handler) http.Handler {
@@ -40,10 +39,6 @@ func JwtVerify(next http.Handler) http.Handler {
 			json.NewEncoder(w).Encode(resp)
 			return
 		}
-		fmt.Println("toke", splitted)
-
-		// tokenPart := splitted[1] //Grab the token part, what we are truly interested in
-		// fmt.Println("got here")
 		tk := &models.Token{}
 
 		// fmt.Println("got here", tk)
@@ -56,10 +51,16 @@ func JwtVerify(next http.Handler) http.Handler {
 			return []byte("secret"), nil
 		})
 
-		fmt.Println("got here afeyeryeyrye", []byte(token.Claims))
-		fmt.Println("got here --tokenpart", err)
-
-		// claims := token.Claims.(*tk)
-		// fmt.Println("claims", claims)
+		fmt.Println("got here afeyeryeyrye", token)
+		if err != nil {
+			fmt.Println("error")
+			fmt.Println(err)
+			var resp = map[string]interface{}{"status": false, "message": "Validation failed"}
+			w.WriteHeader(http.StatusForbidden)
+			json.NewEncoder(w).Encode(resp)
+			return
+		}
+		ctx := context.WithValue(r.Context(), "user", token)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
