@@ -59,13 +59,16 @@ func FindOne(email, password string) map[string]interface{} {
 	}
 
 	tk := &models.Token{
-		user.ID,
-		&jwt.StandardClaims{
+		UserID: user.ID,
+		Name:   user.Name,
+		Email:  user.Email,
+		StandardClaims: &jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+
 	tokenString, error := token.SignedString([]byte("secret"))
 	if error != nil {
 		fmt.Println(error)

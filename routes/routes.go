@@ -17,7 +17,6 @@ var expense []models.Expense
 func Handlers() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
-	// utils.parseClaims()
 	r.Use(commonMiddleware)
 	r.Use(auth.JwtVerify)
 

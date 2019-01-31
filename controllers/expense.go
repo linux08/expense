@@ -49,6 +49,8 @@ func GetExpense(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user")
+	fmt.Println("use-r", user)
 	expense := &models.Expense{}
 	json.NewDecoder(r.Body).Decode(expense)
 	fmt.Println(expense)

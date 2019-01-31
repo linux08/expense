@@ -11,7 +11,10 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// Middleware function, which will be called for each request
+//Exception struct
+type Exception models.Exception
+
+// JwtVerify Middleware function, which will be called for each request
 func JwtVerify(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -27,40 +30,44 @@ func JwtVerify(next http.Handler) http.Handler {
 			}
 		}
 
-		var authHdr = r.Header.Get("Authorization") //Grab the token from the header
+		var authHdr = r.Header.Get("x-access-token") //Grab the token from the header
 
 		authHdr = strings.TrimSpace(authHdr)
-		splitted := strings.Split(authHdr, ".")
 
 		if authHdr == "" {
 			//Token is missing, returns with error code 403 Unauthorized
-			var resp = map[string]interface{}{"status": false, "message": "Missing auth token"}
 			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(resp)
+			json.NewEncoder(w).Encode(Exception{Message: "Missing auth token"})
 			return
 		}
 		tk := &models.Token{}
 
-		// fmt.Println("got here", tk)
-		// fmt.Println("got here --tokenpart", tokenPart)
-
 		token, err := jwt.ParseWithClaims(authHdr, tk, func(token *jwt.Token) (interface{}, error) {
-			// since we only use the one private key to sign the tokens,
-			// we also only use its public counter part to verify
-			// return "secret", nil
 			return []byte("secret"), nil
 		})
 
-		fmt.Println("got here afeyeryeyrye", token)
 		if err != nil {
-			fmt.Println("error")
-			fmt.Println(err)
-			var resp = map[string]interface{}{"status": false, "message": "Validation failed"}
 			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(resp)
+			json.NewEncoder(w).Encode(Exception{Message: err.Error()})
 			return
 		}
+
+		if claims, ok := token.Claims.(*models.Token); ok && token.Valid {
+			fmt.Printf("%v %v", claims.UserID, claims.StandardClaims)
+		} else {
+			fmt.Println(err)
+		}
+		fmt.Println(token.Claims.(*models.Token))
 		ctx := context.WithValue(r.Context(), "user", token)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+
+// func Decode(token *jwt.ParseWithClaims('','')) {
+// 	if claims, ok := token.Claims.(*models.Token); ok && token.Valid {
+// 		fmt.Printf("%v %v", claims.UserID, claims.StandardClaims)
+// 		return
+// 	} else {
+// 		fmt.Println(err)
+// 	}
+// }
