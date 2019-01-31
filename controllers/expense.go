@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 
 	"expense/models"
 )
@@ -49,8 +50,13 @@ func GetExpense(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user")
-	fmt.Println("use-r", user)
+	user := r.Context().Value("user") //.(uint)
+	// user = &user
+	// obj := &user
+	// Map := make(map[string]interface{})
+	fmt.Println(reflect.TypeOf(user))
+	// fmt.Println(json.Unmarshal(user) )
+	fmt.Println("use-r", *user)
 	expense := &models.Expense{}
 	json.NewDecoder(r.Body).Decode(expense)
 	fmt.Println(expense)
@@ -59,7 +65,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	if createdExpense.Error != nil {
 		fmt.Println(errMessage)
 	}
-	json.NewEncoder(w).Encode(createdExpense)
+	json.NewEncoder(w).Encode(user)
 	// var expense models.Expense
 	// _ = json.NewDecoder(r.Body).Decode(&expense)
 	// // expense.ID = strconv.Itoa(rand.Intn(1000))

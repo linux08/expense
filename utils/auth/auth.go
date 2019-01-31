@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"expense/models"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -42,7 +41,7 @@ func JwtVerify(next http.Handler) http.Handler {
 		}
 		tk := &models.Token{}
 
-		token, err := jwt.ParseWithClaims(authHdr, tk, func(token *jwt.Token) (interface{}, error) {
+		_, err := jwt.ParseWithClaims(authHdr, tk, func(token *jwt.Token) (interface{}, error) {
 			return []byte("secret"), nil
 		})
 
@@ -52,22 +51,13 @@ func JwtVerify(next http.Handler) http.Handler {
 			return
 		}
 
-		if claims, ok := token.Claims.(*models.Token); ok && token.Valid {
-			fmt.Printf("%v %v", claims.UserID, claims.StandardClaims)
-		} else {
-			fmt.Println(err)
-		}
-		fmt.Println(token.Claims.(*models.Token))
-		ctx := context.WithValue(r.Context(), "user", token)
+		// if claims, ok := token.Claims.(*models.Token); ok && token.Valid {
+		// 	fmt.Printf("%v %v", claims.UserID, claims.StandardClaims)
+		// } else {
+		// 	fmt.Println(err)
+		// }
+		// fmt.Println(token.Claims.(*models.Token))
+		ctx := context.WithValue(r.Context(), "user", tk)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
-
-// func Decode(token *jwt.ParseWithClaims('','')) {
-// 	if claims, ok := token.Claims.(*models.Token); ok && token.Valid {
-// 		fmt.Printf("%v %v", claims.UserID, claims.StandardClaims)
-// 		return
-// 	} else {
-// 		fmt.Println(err)
-// 	}
-// }
