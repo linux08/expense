@@ -66,6 +66,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(errMessage)
 	}
 	json.NewEncoder(w).Encode(user)
+
 	// var expense models.Expense
 	// _ = json.NewDecoder(r.Body).Decode(&expense)
 	// // expense.ID = strconv.Itoa(rand.Intn(1000))
