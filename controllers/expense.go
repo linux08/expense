@@ -54,12 +54,13 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	// user = &user
 	// obj := &user
 	// Map := make(map[string]interface{})
+	fmt.Println("the user = struct", user)
 	fmt.Println(reflect.TypeOf(user))
 	// fmt.Println(json.Unmarshal(user) )
-	fmt.Println("use-r", *user)
+	// fmt.Println("use-r", *user)
 	expense := &models.Expense{}
 	json.NewDecoder(r.Body).Decode(expense)
-	fmt.Println(expense)
+	fmt.Println(user)
 	createdExpense := db.Create(expense)
 	var errMessage = createdExpense.Error
 	if createdExpense.Error != nil {
