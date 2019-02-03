@@ -58,6 +58,7 @@ func JwtVerify(next http.Handler) http.Handler {
 		// }
 		// fmt.Println(token.Claims.(*models.Token))
 		ctx := context.WithValue(r.Context(), "user", tk)
+		// ctx := context.WithValue(r.Context(), "user", tk.UserID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

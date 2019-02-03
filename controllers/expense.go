@@ -50,17 +50,25 @@ func GetExpense(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user") //.(uint)
-	// user = &user
-	// obj := &user
-	// Map := make(map[string]interface{})
+	user := r.Context().Value("user")
+
 	fmt.Println("the user = struct", user)
 	fmt.Println(reflect.TypeOf(user))
-	// fmt.Println(json.Unmarshal(user) )
-	// fmt.Println("use-r", *user)
+
+	// var jsonDog models.Token
+
+	// x := &user(string("Name"))
+	// user = make(map[string]int64)
+
+	// fmt.Println(json.Unmarshal(user.Value(1)))
+	// var m map[string]interface{}
+	// fmt.Println("uscce-r", json.Unmarshal(m, &user))
+
 	expense := &models.Expense{}
+
 	json.NewDecoder(r.Body).Decode(expense)
-	fmt.Println(user)
+
+	// fmt.Println(user["Name"])
 	createdExpense := db.Create(expense)
 	var errMessage = createdExpense.Error
 	if createdExpense.Error != nil {
