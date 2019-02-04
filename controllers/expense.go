@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"reflect"
 
 	"expense/models"
 )
@@ -53,16 +52,10 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user")
 
 	fmt.Println("the user = struct", user)
-	fmt.Println(reflect.TypeOf(user))
-
-	// var jsonDog models.Token
-
-	// x := &user(string("Name"))
-	// user = make(map[string]int64)
-
-	// fmt.Println(json.Unmarshal(user.Value(1)))
-	// var m map[string]interface{}
-	// fmt.Println("uscce-r", json.Unmarshal(m, &user))
+	userInfo := models.Token{}
+	bodyBytes, _ := json.Marshal(user)
+	json.Unmarshal(bodyBytes, &userInfo)
+	// fmt.Println(userInfo.UserID)
 
 	expense := &models.Expense{}
 
