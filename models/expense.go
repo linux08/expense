@@ -9,6 +9,6 @@ type Expense struct {
 	Name   string
 	Reason string `json:"reason"`
 	Vat    string `json:"vat"`
-	UserID uint
-	User   *User `json:"user_id"`
+	UserID uint   `json:"user_id"`
+	// User   *User  `json:"user_id"`
 }

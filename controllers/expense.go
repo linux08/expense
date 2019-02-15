@@ -24,10 +24,11 @@ func InitSampleObj() (expenses expenseArray) {
 	expense := make([]models.Expense, 0, 5)
 
 	expense = append(expense,
-		models.Expense{Name: "good", Reason: "i need to save", Vat: "132", User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{Name: "good", Reason: "i need to save", Vat: "132"}) //  User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}
 
 	expense = append(expense,
-		models.Expense{Name: "godod", Reason: "i need to save", Vat: "13f2", User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}})
+		models.Expense{Name: "godod", Reason: "i need to save", Vat: "13f2"}) //  User: &models.User{Name: "linx08", Gender: "male", Email: "abimbola120@gmail.com", Password: "pass123"}
+
 	return expense
 }
 
@@ -62,12 +63,15 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(expense)
 
 	// fmt.Println(user["Name"])
+	expense.UserID = userInfo.UserID
+	fmt.Print("expens", expense)
 	createdExpense := db.Create(expense)
+	// cExpense := db.Preload("Expense").Find(&models.User{})
 	var errMessage = createdExpense.Error
 	if createdExpense.Error != nil {
 		fmt.Println(errMessage)
 	}
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(createdExpense)
 
 	// var expense models.Expense
 	// _ = json.NewDecoder(r.Body).Decode(&expense)
