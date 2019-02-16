@@ -113,7 +113,6 @@ func UpdateExpense(w http.ResponseWriter, r *http.Request) {
 	// 	fmt.Println(expense)
 	// 	json.NewEncoder(w).Encode(expense)
 	// }
-	// }
 
 	json.NewEncoder(w).Encode(expense)
 }
