@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"expense/models"
+
+	"github.com/gorilla/mux"
 )
 
 //Init expense as a slice of expense struct
@@ -38,15 +40,12 @@ func GetExpenses(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetExpense(w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	expense := InitSampleObj()
-	// for _, item := range expense {
-	// 	if item.ID == params["id"] {
-	// 		json.NewEncoder(w).Encode(item)
-	// 		return
-	// 	}
-	// }
-	json.NewEncoder(w).Encode(expense)
+	params := mux.Vars(r)
+	fmt.Println("params --here", params["id"])
+
+	expense := &models.Expense{}
+	exp := db.Where("Num = ?", params["id"]).First(expense).Preload("User")
+	json.NewEncoder(w).Encode(exp)
 }
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {

@@ -9,6 +9,8 @@ type Expense struct {
 	Name   string
 	Reason string `json:"reason"`
 	Vat    string `json:"vat"`
-	UserID uint   `json:"user_id"`
+	Num    int    `gorm:"AUTO_INCREMENT"` // set num to auto incrementable
+	// UserID uint   `gorm:"index"`
+	UserID uint `json:"user_id"`
 	// User   *User  `json:"user_id"`
 }
