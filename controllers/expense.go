@@ -35,8 +35,10 @@ func InitSampleObj() (expenses expenseArray) {
 }
 
 func GetExpenses(w http.ResponseWriter, r *http.Request) {
-	var expense = InitSampleObj()
-	json.NewEncoder(w).Encode(expense)
+	var expenses []models.Expense
+	db.Find(&expenses)
+
+	json.NewEncoder(w).Encode(expenses)
 }
 
 func GetExpense(w http.ResponseWriter, r *http.Request) {
@@ -63,6 +65,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 
 	// fmt.Println(user["Name"])
 	expense.UserID = userInfo.UserID
+	// expense.user_id = userInfo.UserID
 	fmt.Print("expens", expense)
 	createdExpense := db.Create(expense)
 	// cExpense := db.Preload("Expense").Find(&models.User{})

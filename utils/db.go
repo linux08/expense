@@ -20,6 +20,7 @@ func ConnectDB() *gorm.DB {
 
 	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password) //Build connection string
 
+	//if database doesnt exist create it manually first
 	db, err := gorm.Open("postgres", dbURI)
 
 	// Migrate the schema

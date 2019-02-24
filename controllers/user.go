@@ -106,6 +106,17 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(createdUser)
 }
 
+func AddExpenseToUser(w http.ResponseWriter, r *http.Request) {
+	user := &models.User{}
+	params := mux.Vars(r)
+	var id = params["id"]
+	db.First(&user, id)
+
+	// user.Expense = "1"
+	db.Save(&user)
+
+}
+
 //FetchUser function
 func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	var users []models.User
