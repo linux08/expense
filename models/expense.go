@@ -11,6 +11,5 @@ type Expense struct {
 	Vat    string `json:"vat"`
 	Num    int    `gorm:"AUTO_INCREMENT"` // set num to auto incrementable
 	UserID uint   //  `gorm:"index"`
-
 	// User   *User  `json:"user_id"`
 }

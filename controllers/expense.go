@@ -41,12 +41,26 @@ func GetExpenses(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(expenses)
 }
 
+//Gte expense that belongs to a user
+func GetExpenseForAUser(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user")
+
+	fmt.Println("the user = struct", user)
+	userInfo := models.Token{}
+	bodyBytes, _ := json.Marshal(user)
+	json.Unmarshal(bodyBytes, &userInfo)
+
+	// expense := &models.Expense{}
+	var expense []models.Expense
+	// exp :=
+	db.Where("user_id = ?", userInfo.UserID).Find(&expense)
+	json.NewEncoder(w).Encode(expense)
+}
+
 func GetExpense(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	fmt.Println("params --here", params["id"])
-
 	expense := &models.Expense{}
-	exp := db.Where("Num = ?", params["id"]).First(expense).Preload("User")
+	exp := db.Where("ID = ?", params["id"]).First(expense).Preload("User")
 	json.NewEncoder(w).Encode(exp)
 }
 
