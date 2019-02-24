@@ -14,5 +14,5 @@ type User struct {
 	Password string `json:"Password"`
 	Num      int    `gorm:"AUTO_INCREMENT"` // set num to auto incrementable
 	Expenses []Expense
-	Expense  Expense `gorm:"auto_preload"`
+	// Expense  Expense `gorm:"auto_preload"`
 }

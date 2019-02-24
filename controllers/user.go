@@ -111,8 +111,6 @@ func AddExpenseToUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var id = params["id"]
 	db.First(&user, id)
-
-	// user.Expense = "1"
 	db.Save(&user)
 
 }
@@ -120,7 +118,7 @@ func AddExpenseToUser(w http.ResponseWriter, r *http.Request) {
 //FetchUser function
 func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	var users []models.User
-	db.Find(&users)
+	db.Preload("Expenses").Find(&users)
 
 	json.NewEncoder(w).Encode(users)
 }

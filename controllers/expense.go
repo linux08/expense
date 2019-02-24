@@ -41,7 +41,7 @@ func GetExpenses(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(expenses)
 }
 
-//Gte expense that belongs to a user
+//Get expense that belongs to a user
 func GetExpenseForAUser(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user")
 
@@ -50,9 +50,7 @@ func GetExpenseForAUser(w http.ResponseWriter, r *http.Request) {
 	bodyBytes, _ := json.Marshal(user)
 	json.Unmarshal(bodyBytes, &userInfo)
 
-	// expense := &models.Expense{}
 	var expense []models.Expense
-	// exp :=
 	db.Where("user_id = ?", userInfo.UserID).Find(&expense)
 	json.NewEncoder(w).Encode(expense)
 }
